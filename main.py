@@ -14,8 +14,8 @@ from warehouse_stats import build_warehouse_statistics
 from buildings_excel_builder import build_buildings_workbook_part
 from production_balance import build_production_balance
 from production_balance_excel_builder import build_production_balance_sheet
-from profit_calculator import calculate_profit
-from market_parser import parse_market_rates
+from market_rates import build_market_price_map
+from profit_calculator import build_daily_profit_report
 
 
 
@@ -56,6 +56,22 @@ def main() -> None:
     production_balance = build_production_balance(mine_stats, factory_stats)
     print("Расчёт производства построен.")
     print("Ресурсы в балансе", len(production_balance["balance_rows"]))
+
+market_price_by_resource = build_market_price_map(api_data)
+
+print("Рыночные ставки загружены.")
+print("Ресурсов с рыночными ставками:", len(market_price_by_resource))
+
+daily_profit_report = build_daily_profit_report(
+    production_balance=production_balance,
+    market_price_by_resource=market_price_by_resource,
+    factory_stats=factory_stats,
+    special_building_stats=special_building_stats,
+)
+
+print("Расчёт чистой прибыли (оценка) построен.")
+print("Логистика:", f"{daily_profit_report['logistics_percent'] * 100:.2f}%")
+print("Итоговая чистая прибыль (оценка):", round(daily_profit_report["total_net_profit_day"], 2))
 
     profit_stats = calculate_profit(
     production_per_day,
