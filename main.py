@@ -69,6 +69,11 @@ daily_profit_report = build_daily_profit_report(
     special_building_stats=special_building_stats,
 )
 
+print("Логистика:", f"{daily_profit_report['logistics_percent'] * 100:.2f}%")
+print("Чистая прибыль по ресурсам:", round(daily_profit_report["mine_net_profit_day"], 2))
+print("Чистая прибыль по товарам:", round(daily_profit_report["factory_net_profit_day"], 2))
+print("Стоимость запуска заводов / сутки:", round(daily_profit_report["total_credits_cost_per_day"], 2))
+print("Итоговая чистая прибыль (оценка):", round(daily_profit_report["total_net_profit_day"], 2))
 print("Расчёт чистой прибыли (оценка) построен.")
 print("Логистика:", f"{daily_profit_report['logistics_percent'] * 100:.2f}%")
 print("Итоговая чистая прибыль (оценка):", round(daily_profit_report["total_net_profit_day"], 2))
