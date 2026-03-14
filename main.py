@@ -17,6 +17,7 @@ from production_balance_excel_builder import build_production_balance_sheet
 from market_rates import build_market_price_map
 from profit_calculator import build_daily_profit_report
 from market_parser import parse_market_rates
+from profit_calculator_excel_builder import build_profit_summary_sheet
 
 
 
@@ -92,6 +93,8 @@ print("Итоговая чистая прибыль (оценка):", round(dail
     )
     
     build_production_balance_sheet(wb, production_balance)
+
+build_profit_summary_sheet(wb, daily_profit_report)
 
     output_dir = Path("E:/RG Data API/")
     output_dir.mkdir(exist_ok=True)
