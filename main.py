@@ -93,22 +93,6 @@ print("Итоговая чистая прибыль (оценка):", round(dail
     
     build_production_balance_sheet(wb, production_balance)
 
-    ws_profit = wb.create_sheet("Profit")
-
-ws_profit.append(["Показатель", "Значение"])
-ws_profit.append(["Логистика", f"{daily_profit_report['logistics_percent'] * 100:.2f}%"])
-
-ws_profit.append(["Доход по ресурсам / сутки", round(daily_profit_report["mine_income_day"], 2)])
-ws_profit.append(["Расход по ресурсам / сутки", round(daily_profit_report["mine_expense_day"], 2)])
-ws_profit.append(["Чистая прибыль по ресурсам (оценка)", round(daily_profit_report["mine_net_profit_day"], 2)])
-
-ws_profit.append(["Доход по товарам / сутки", round(daily_profit_report["factory_income_day"], 2)])
-ws_profit.append(["Расход по товарам / сутки", round(daily_profit_report["factory_expense_day"], 2)])
-ws_profit.append(["Чистая прибыль по товарам (оценка)", round(daily_profit_report["factory_net_profit_day"], 2)])
-
-ws_profit.append(["Стоимость запуска заводов / сутки", round(daily_profit_report["total_credits_cost_per_day"], 2)])
-ws_profit.append(["Итоговая чистая прибыль (оценка)", round(daily_profit_report["total_net_profit_day"], 2)])
-
     output_dir = Path("E:/RG Data API/")
     output_dir.mkdir(exist_ok=True)
     archive_old_reports(output_dir)
