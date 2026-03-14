@@ -59,26 +59,26 @@ def main() -> None:
     print("Расчёт производства построен.")
     print("Ресурсы в балансе", len(production_balance["balance_rows"]))
 
-market_price_by_resource = build_market_price_map(api_data)
+    market_price_by_resource = build_market_price_map(api_data)
 
-print("Рыночные ставки загружены.")
-print("Ресурсов с рыночными ставками:", len(market_price_by_resource))
+    print("Рыночные ставки загружены.")
+    print("Ресурсов с рыночными ставками:", len(market_price_by_resource))
 
-daily_profit_report = build_daily_profit_report(
-    production_balance=production_balance,
-    market_price_by_resource=market_price_by_resource,
-    factory_stats=factory_stats,
-    special_building_stats=special_building_stats,
+    daily_profit_report = build_daily_profit_report(
+        production_balance=production_balance,
+        market_price_by_resource=market_price_by_resource,
+        factory_stats=factory_stats,
+        special_building_stats=special_building_stats,
 )
 
-print("Логистика:", f"{daily_profit_report['logistics_percent'] * 100:.2f}%")
-print("Чистая прибыль по ресурсам:", round(daily_profit_report["mine_net_profit_day"], 2))
-print("Чистая прибыль по товарам:", round(daily_profit_report["factory_net_profit_day"], 2))
-print("Стоимость запуска заводов / сутки:", round(daily_profit_report["total_credits_cost_per_day"], 2))
-print("Итоговая чистая прибыль (оценка):", round(daily_profit_report["total_net_profit_day"], 2))
-print("Расчёт чистой прибыли (оценка) построен.")
-print("Логистика:", f"{daily_profit_report['logistics_percent'] * 100:.2f}%")
-print("Итоговая чистая прибыль (оценка):", round(daily_profit_report["total_net_profit_day"], 2))
+    print("Логистика:", f"{daily_profit_report['logistics_percent'] * 100:.2f}%")
+    print("Чистая прибыль по ресурсам:", round(daily_profit_report["mine_net_profit_day"], 2))
+    print("Чистая прибыль по товарам:", round(daily_profit_report["factory_net_profit_day"], 2))
+    print("Стоимость запуска заводов / сутки:", round(daily_profit_report["total_credits_cost_per_day"], 2))
+    print("Итоговая чистая прибыль (оценка):", round(daily_profit_report["total_net_profit_day"], 2))
+    print("Расчёт чистой прибыли (оценка) построен.")
+    print("Логистика:", f"{daily_profit_report['logistics_percent'] * 100:.2f}%")
+    print("Итоговая чистая прибыль (оценка):", round(daily_profit_report["total_net_profit_day"], 2))
 
     wb = Workbook()
     default_sheet = wb.active
@@ -94,7 +94,7 @@ print("Итоговая чистая прибыль (оценка):", round(dail
     
     build_production_balance_sheet(wb, production_balance)
 
-build_profit_summary_sheet(wb, daily_profit_report)
+    build_profit_summary_sheet(wb, daily_profit_report)
 
     output_dir = Path("E:/RG Data API/")
     output_dir.mkdir(exist_ok=True)

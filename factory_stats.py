@@ -23,8 +23,6 @@ def resolve_item_name(item_id, item_id_to_name: dict) -> str:
     item_id = str(item_id).strip()
     return item_id_to_name.get(item_id, f"ID {item_id}")
 
-total_credits_cost_per_day = 0.0
-
 def build_factory_statistics(api_data: dict, item_id_to_name: dict) -> dict:
     factories_list = api_data.get("factories", [])
     factory_rates_list = api_data.get("factory_rates", [])
@@ -40,6 +38,8 @@ def build_factory_statistics(api_data: dict, item_id_to_name: dict) -> dict:
 
     factory_output_by_resource = defaultdict(float)
     factory_consumption_by_resource = defaultdict(float)
+    
+    total_credits_cost_per_day = 0.0
 
     for row in factories_list:
         factory_id = str(row.get("factoryID", "")).strip()
@@ -64,16 +64,17 @@ def build_factory_statistics(api_data: dict, item_id_to_name: dict) -> dict:
 
         # Если завод в strike, можно при желании обнулять выпуск
         is_active = strike != "yes"
-
+        
         output_per_hour = base_output_per_hour * level if is_active else 0.0
         output_per_day = output_per_hour * 24
 
-        cycles_per_hour = (output_per_hour / output_per_cycle) if output_per_cycle else 0.0
+        cycles_per_hour = (base_output_per_hour / output_per_cycle) if output_per_cycle else 0.0
         cycles_per_day = cycles_per_hour * 24
-credits_cost_per_hour = credits_per_cycle * cycles_per_hour
-credits_cost_per_day = credits_cost_per_hour * 24
 
-total_credits_cost_per_day += credits_cost_per_day
+        credits_cost_per_hour = credits_per_cycle * cycles_per_hour * level
+        credits_cost_per_day = credits_cost_per_hour * 24
+
+        total_credits_cost_per_day += credits_cost_per_day
 
         inputs = []
 
@@ -83,9 +84,12 @@ total_credits_cost_per_day += credits_cost_per_day
 
             if input_item_id and input_item_id.lower() != "null" and qty_per_cycle:
                 input_item_name = resolve_item_name(input_item_id, item_id_to_name)
+                
+                is_active = strike != "yes"
+                effective_level = level if is_active else 0
 
-                amount_per_hour = qty_per_cycle * cycles_per_hour
-                amount_per_day = qty_per_cycle * cycles_per_day
+                amount_per_hour = qty_per_cycle * cycles_per_hour * effective_level
+                amount_per_day = qty_per_cycle * cycles_per_day * effective_level
 
                 inputs.append({
                     "item_id": input_item_id,
@@ -118,8 +122,8 @@ total_credits_cost_per_day += credits_cost_per_day
 
             "cycles_per_hour": cycles_per_hour,
             "cycles_per_day": cycles_per_day,
-"credits_cost_per_hour": credits_cost_per_hour,
-"credits_cost_per_day": credits_cost_per_day,
+            "credits_cost_per_hour": credits_cost_per_hour,
+            "credits_cost_per_day": credits_cost_per_day,
 
             "inputs": inputs,
         })
@@ -130,5 +134,5 @@ total_credits_cost_per_day += credits_cost_per_day
         "factory_rows": factory_rows,
         "factory_output_by_resource": dict(factory_output_by_resource),
         "factory_consumption_by_resource": dict(factory_consumption_by_resource),
-"total_credits_cost_per_day": total_credits_cost_per_day,
+        "total_credits_cost_per_day": total_credits_cost_per_day,
     }

@@ -45,4 +45,4 @@ def fetch_all_api_data(api_key: str):
         "special_buildings": fetch_api_json(3, api_key),
         "items_catalog": fetch_api_json(1001, api_key),
         "market_rates": fetch_api_json(1006, api_key),
-           }
+        }
