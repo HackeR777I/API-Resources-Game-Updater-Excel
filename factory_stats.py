@@ -130,4 +130,5 @@ total_credits_cost_per_day += credits_cost_per_day
         "factory_rows": factory_rows,
         "factory_output_by_resource": dict(factory_output_by_resource),
         "factory_consumption_by_resource": dict(factory_consumption_by_resource),
+"total_credits_cost_per_day": total_credits_cost_per_day,
     }
