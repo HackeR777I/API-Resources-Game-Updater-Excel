@@ -15,13 +15,25 @@ def calculate_logistics_percent(special_building_stats: dict) -> float:
     return max(logistics_percent, 0.05)
 
 
-def choose_effective_price(player_price: float, system_price: float) -> float:
+def choose_sell_price(group: str, player_price: float, system_price: float) -> float:
     """
-    Если есть ставка игроков, берём её.
-    Иначе берём системную ставку.
+    Для шахтных ресурсов используем KIprice.
+    Для товаров используем цену игроков, если она есть, иначе KIprice.
     """
-    if player_price > 0:
-        return player_price
+    if group == "mine":
+        return system_price
+
+    if group == "factory":
+        return player_price if player_price > 0 else system_price
+
+    return system_price
+
+
+def choose_buy_price(group: str, player_price: float, system_price: float) -> float:
+    """
+    Для закупки пока используем KIprice.
+    Это даёт более консервативную и стабильную оценку.
+    """
     return system_price
 
 
@@ -58,18 +70,20 @@ def build_daily_profit_report(
 
         player_price = float(price_info.get("player_price", 0.0))
         system_price = float(price_info.get("system_price", 0.0))
-        effective_price = choose_effective_price(player_price, system_price)
+
+        sell_price = choose_sell_price(group, player_price, system_price)
+        buy_price = choose_buy_price(group, player_price, system_price)
 
         income_day = 0.0
         expense_day = 0.0
         net_profit_day = 0.0
 
         if balance_day > 0:
-            income_day = balance_day * effective_price
+            income_day = balance_day * sell_price
             net_profit_day = income_day
 
         elif balance_day < 0:
-            base_expense = abs(balance_day) * effective_price
+            base_expense = abs(balance_day) * buy_price
             expense_day = base_expense * (1 + logistics_percent)
             net_profit_day = -expense_day
 
@@ -89,7 +103,8 @@ def build_daily_profit_report(
             "balance_day": balance_day,
             "player_price": player_price,
             "system_price": system_price,
-            "effective_price": effective_price,
+            "sell_price": sell_price,
+            "buy_price": buy_price,
             "income_day": income_day,
             "expense_day": expense_day,
             "net_profit_day": net_profit_day,
