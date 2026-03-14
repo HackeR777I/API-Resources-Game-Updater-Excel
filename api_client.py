@@ -10,6 +10,7 @@ def fetch_api_json(query_id: int, api_key: str):
         "k": api_key,
         "f": 1,
         "l": "ru",
+        "d": 3
     }
 
     response = requests.get(BASE_URL, params=params, timeout=(10, 120))
@@ -43,4 +44,5 @@ def fetch_all_api_data(api_key: str):
         "warehouses": fetch_api_json(2, api_key),
         "special_buildings": fetch_api_json(3, api_key),
         "items_catalog": fetch_api_json(1001, api_key),
-    }
+        "market_rates": fetch_api_json(1006, api_key),
+           }
