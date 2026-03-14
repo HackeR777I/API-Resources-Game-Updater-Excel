@@ -70,6 +70,10 @@ def build_factory_statistics(api_data: dict, item_id_to_name: dict) -> dict:
 
         cycles_per_hour = (output_per_hour / output_per_cycle) if output_per_cycle else 0.0
         cycles_per_day = cycles_per_hour * 24
+credits_cost_per_hour = credits_per_cycle * cycles_per_hour
+credits_cost_per_day = credits_cost_per_hour * 24
+
+total_credits_cost_per_day += credits_cost_per_day
 
         inputs = []
 
