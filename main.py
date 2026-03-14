@@ -14,6 +14,8 @@ from warehouse_stats import build_warehouse_statistics
 from buildings_excel_builder import build_buildings_workbook_part
 from production_balance import build_production_balance
 from production_balance_excel_builder import build_production_balance_sheet
+from profit_calculator import calculate_profit
+from market_parser import parse_market_rates
 
 
 
@@ -31,6 +33,7 @@ def archive_old_reports(report_dir:Path):
 def main() -> None:
     print("=== Resources Game API Report ===")
     api_data = fetch_all_api_data(api_key)
+    market_prices = parse_market_rates(api_data["market_rates"])
     
     item_id_to_name = build_item_id_to_name(api_data)
     print("Словарь ресурсов построен.")
@@ -54,6 +57,13 @@ def main() -> None:
     print("Расчёт производства построен.")
     print("Ресурсы в балансе", len(production_balance["balance_rows"]))
 
+    profit_stats = calculate_profit(
+    production_per_day,
+    consumption_per_day,
+    market_prices,
+    logistics_percent=15
+    )
+
     wb = Workbook()
     default_sheet = wb.active
     wb.remove(default_sheet)
@@ -67,6 +77,12 @@ def main() -> None:
     )
     
     build_production_balance_sheet(wb, production_balance)
+
+    ws_profit = wb.create_sheet("Profit")
+
+ws_profit.append(["Income per day", profit_stats["income"]])
+ws_profit.append(["Expenses per day", profit_stats["expenses"]])
+ws_profit.append(["Net profit (estimate)", profit_stats["net_profit"]])
 
     output_dir = Path("E:/RG Data API/")
     output_dir.mkdir(exist_ok=True)
