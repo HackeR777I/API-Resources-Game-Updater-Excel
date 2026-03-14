@@ -73,13 +73,6 @@ print("Расчёт чистой прибыли (оценка) построен.
 print("Логистика:", f"{daily_profit_report['logistics_percent'] * 100:.2f}%")
 print("Итоговая чистая прибыль (оценка):", round(daily_profit_report["total_net_profit_day"], 2))
 
-    profit_stats = calculate_profit(
-    production_per_day,
-    consumption_per_day,
-    market_prices,
-    logistics_percent=15
-    )
-
     wb = Workbook()
     default_sheet = wb.active
     wb.remove(default_sheet)
