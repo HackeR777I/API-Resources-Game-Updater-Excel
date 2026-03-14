@@ -118,6 +118,8 @@ total_credits_cost_per_day += credits_cost_per_day
 
             "cycles_per_hour": cycles_per_hour,
             "cycles_per_day": cycles_per_day,
+"credits_cost_per_hour": credits_cost_per_hour,
+"credits_cost_per_day": credits_cost_per_day,
 
             "inputs": inputs,
         })
