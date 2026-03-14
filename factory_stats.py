@@ -23,6 +23,7 @@ def resolve_item_name(item_id, item_id_to_name: dict) -> str:
     item_id = str(item_id).strip()
     return item_id_to_name.get(item_id, f"ID {item_id}")
 
+total_credits_cost_per_day = 0.0
 
 def build_factory_statistics(api_data: dict, item_id_to_name: dict) -> dict:
     factories_list = api_data.get("factories", [])
